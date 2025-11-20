@@ -150,8 +150,8 @@ def predict_sentiment(text):
     processed = [full_preprocess(text)]
     sequences = tokenizer.texts_to_sequences(processed)
     padded = pad_sequences(sequences, maxlen=maxlen, padding='post')
-    probs = model.predict(padded, verbose=0).flatten()
-    labels = le.inverse_transform((probs > 0.5).astype("int32"))
+    prob = model.predict(padded, verbose=0)[0][0]
+    label = le.inverse_transform([int(prob > 0.5)])[0]
     return label
 
 
@@ -174,6 +174,7 @@ if st.button("Prediksi"):
         st.warning("Masukkan teks terlebih dahulu.")
 
 st.caption("Model BiLSTM – Analisis Sentimen Program Makan Bergizi Gratis")
+
 
 
 
