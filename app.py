@@ -29,38 +29,46 @@ def add_bg_from_local(image_file):
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0,0,0,0.55); /* atur opacity */
+        background: rgba(0,0,0,0.55);
         z-index: 0;
     }}
 
-    /* Semua elemen di atas overlay */
     .stApp > * {{
         position: relative;
         z-index: 1;
     }}
 
-    /* Biar header (title) putih */
+    /* Header putih */
     h1, h2, h3, h4, h5, h6, p, label, span {{
         color: white !important;
+        font-weight: 700 !important;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
     }}
 
-    /* Style untuk text area (card translucent) */
+    /* FIX: Text area → background putih solid, teks hitam */
     .stTextArea textarea {{
-        background: rgba(255, 255, 255, 0.25) !important;
-        color: white !important;
+        background: rgba(255,255,255,0.95) !important;
+        color: black !important;
+        font-weight: 600 !important;
         border-radius: 12px !important;
         padding: 15px !important;
-        backdrop-filter: blur(6px) !important;
-        border: 1px solid rgba(255,255,255,0.3) !important;
+        border: 2px solid rgba(255,255,255,0.5) !important;
     }}
 
-    /* Button styling lebih clean */
+    /* Caption (Model BiLSTM...) diperjelas */
+    .stMarkdown small, .stCaption, .stFooter {{
+        color: white !important;
+        font-weight: 700 !important;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
+    }}
+
+    /* Tombol */
     .stButton button {{
         background-color: rgba(255, 255, 255, 0.85) !important;
         color: black !important;
         border-radius: 10px !important;
         padding: 10px 20px !important;
-        font-weight: 600 !important;
+        font-weight: 700 !important;
         border: none !important;
     }}
 
@@ -70,7 +78,6 @@ def add_bg_from_local(image_file):
         transform: scale(1.02);
         transition: 0.2s;
     }}
-
     </style>
     """
     st.markdown(css, unsafe_allow_html=True)
@@ -167,6 +174,7 @@ if st.button("Prediksi"):
         st.warning("Masukkan teks terlebih dahulu.")
 
 st.caption("Model BiLSTM – Analisis Sentimen Program Makan Bergizi Gratis")
+
 
 
 
