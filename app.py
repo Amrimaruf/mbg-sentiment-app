@@ -110,7 +110,7 @@ model, tokenizer, le, maxlen = load_artefacts()
 # 🔹 PREPROCESSING (SAMA DENGAN COLAB)
 # ==========================================
 # === Load kamus normalisasi ===
-kamus = pd.read_csv("Data/kamusnormalisasi.csv")
+kamus = pd.read_csv("./Data/kamusnormalisasi.csv")
 kamus_dict = dict(zip(kamus["salah"], kamus["benar"]))
 
 # === Tokenizer sama seperti training ===
@@ -179,6 +179,7 @@ if st.button("Prediksi"):
         st.warning("Masukkan teks terlebih dahulu.")
 
 st.caption("Model BiLSTM – Analisis Sentimen Program Makan Bergizi Gratis")
+
 
 
 
