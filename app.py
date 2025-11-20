@@ -13,7 +13,7 @@ def add_bg_from_local(image_file):
 
     css = f"""
     <style>
-    /* Background image */
+    /* Background image full */
     .stApp {{
         background-image: url("data:image/png;base64,{encoded_string}");
         background-size: cover;
@@ -21,7 +21,7 @@ def add_bg_from_local(image_file):
         background-repeat: no-repeat;
     }}
 
-    /* Overlay gelap biar teks lebih jelas */
+    /* TANPA overlay gelap (jadi background asli terlihat penuh) */
     .stApp::before {{
         content: "";
         position: fixed;
@@ -29,48 +29,46 @@ def add_bg_from_local(image_file):
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0,0,0,0.55); /* atur opacity */
+        background: rgba(255,255,255,0.3); /* overlay tipis putih biar teks hitam kebaca */
         z-index: 0;
     }}
 
-    /* Semua elemen di atas overlay */
+    /* Semua elemen konten di atas overlay */
     .stApp > * {{
         position: relative;
         z-index: 1;
     }}
 
-    /* Biar header (title) putih */
+    /* Teks warna hitam */
     h1, h2, h3, h4, h5, h6, p, label, span {{
-        color: white !important;
+        color: black !important;
     }}
 
-    /* Style untuk text area (card translucent) */
+    /* Text Area: kotak putih transparan */
     .stTextArea textarea {{
-        background: rgba(255, 255, 255, 0.25) !important;
-        color: white !important;
+        background: rgba(255, 255, 255, 0.78) !important;
+        color: black !important;
         border-radius: 12px !important;
         padding: 15px !important;
-        backdrop-filter: blur(6px) !important;
-        border: 1px solid rgba(255,255,255,0.3) !important;
+        border: 1px solid rgba(0,0,0,0.2) !important;
+        backdrop-filter: blur(4px);
     }}
 
-    /* Button styling lebih clean */
+    /* Tombol rapi */
     .stButton button {{
-        background-color: rgba(255, 255, 255, 0.85) !important;
+        background-color: #ffffff !important;
         color: black !important;
         border-radius: 10px !important;
-        padding: 10px 20px !important;
+        padding: 10px 22px !important;
         font-weight: 600 !important;
-        border: none !important;
+        border: 1px solid rgba(0,0,0,0.3) !important;
     }}
 
     .stButton button:hover {{
-        background-color: white !important;
-        color: black !important;
+        background-color: #f0f0f0 !important;
         transform: scale(1.02);
         transition: 0.2s;
     }}
-
     </style>
     """
     st.markdown(css, unsafe_allow_html=True)
@@ -167,6 +165,7 @@ if st.button("Prediksi"):
         st.warning("Masukkan teks terlebih dahulu.")
 
 st.caption("Model BiLSTM – Analisis Sentimen Program Makan Bergizi Gratis")
+
 
 
 
