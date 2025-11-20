@@ -1,4 +1,5 @@
 import streamlit as st
+import os
 import re, pickle, joblib, json, base64
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.sequence import pad_sequences
@@ -179,6 +180,7 @@ if st.button("Prediksi"):
         st.warning("Masukkan teks terlebih dahulu.")
 
 st.caption("Model BiLSTM – Analisis Sentimen Program Makan Bergizi Gratis")
+
 
 
 
