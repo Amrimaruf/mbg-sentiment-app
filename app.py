@@ -13,15 +13,16 @@ def add_bg_from_local(image_file):
 
     css = f"""
     <style>
-    /* Background image full */
+    /* Background image HD */
     .stApp {{
         background-image: url("data:image/png;base64,{encoded_string}");
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
+        background-attachment: fixed; /* biar tampak lebih stabil */
     }}
 
-    /* TANPA overlay gelap (jadi background asli terlihat penuh) */
+    /* Overlay super tipis agar teks tetap jelas tapi gambar tidak buram */
     .stApp::before {{
         content: "";
         position: fixed;
@@ -29,7 +30,7 @@ def add_bg_from_local(image_file):
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(255,255,255,0.3); /* overlay tipis putih biar teks hitam kebaca */
+        background: rgba(255,255,255,0.12); /* 12% saja */
         z-index: 0;
     }}
 
@@ -39,40 +40,47 @@ def add_bg_from_local(image_file):
         z-index: 1;
     }}
 
-    /* Teks warna hitam */
-    h1, h2, h3, h4, h5, h6, p, label, span {{
+    /* Teks lebih tebal dan lebih jelas */
+    h1, h2, h3, h4, h5, h6 {{
         color: black !important;
+        font-weight: 800 !important;
+        text-shadow: 1px 1px 2px rgba(255,255,255,0.7);
     }}
 
-    /* Text Area: kotak putih transparan */
+    p, label, span {{
+        color: black !important;
+        font-weight: 600 !important;
+        text-shadow: 1px 1px 2px rgba(255,255,255,0.7);
+    }}
+
+    /* Text area: putih bersih & tebal */
     .stTextArea textarea {{
-        background: rgba(255, 255, 255, 0.78) !important;
+        background: rgba(255, 255, 255, 0.92) !important;
         color: black !important;
         border-radius: 12px !important;
         padding: 15px !important;
-        border: 1px solid rgba(0,0,0,0.2) !important;
-        backdrop-filter: blur(4px);
-    }}
-
-    /* Tombol rapi */
-    .stButton button {{
-        background-color: #ffffff !important;
-        color: black !important;
-        border-radius: 10px !important;
-        padding: 10px 22px !important;
         font-weight: 600 !important;
         border: 1px solid rgba(0,0,0,0.3) !important;
     }}
 
+    /* Tombol */
+    .stButton button {{
+        background-color: #ffffff !important;
+        color: black !important;
+        border-radius: 10px !important;
+        padding: 10px 24px !important;
+        font-weight: 700 !important;
+        border: 1px solid rgba(0,0,0,0.35) !important;
+    }}
+
     .stButton button:hover {{
-        background-color: #f0f0f0 !important;
-        transform: scale(1.02);
+        background-color: #f3f3f3 !important;
+        transform: scale(1.03);
         transition: 0.2s;
     }}
     </style>
     """
     st.markdown(css, unsafe_allow_html=True)
-
 
 # ==========================================
 # 🔹 PAGE CONFIG DAN BACKGROUND
@@ -141,8 +149,8 @@ def predict_sentiment(text):
     processed = [full_preprocess(text)]
     sequences = tokenizer.texts_to_sequences(processed)
     padded = pad_sequences(sequences, maxlen=maxlen, padding='post')
-    prob = model.predict(padded, verbose=0)[0][0]
-    label = le.inverse_transform([int(prob > 0.5)])[0]
+    probs = model.predict(padded, verbose=0).flatten()
+    labels = le.inverse_transform((probs > 0.5).astype("int32"))
     return label
 
 
@@ -165,6 +173,7 @@ if st.button("Prediksi"):
         st.warning("Masukkan teks terlebih dahulu.")
 
 st.caption("Model BiLSTM – Analisis Sentimen Program Makan Bergizi Gratis")
+
 
 
 
