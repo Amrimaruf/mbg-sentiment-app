@@ -114,13 +114,6 @@ model, tokenizer, le, maxlen = load_artefacts()
 kamus = pd.read_csv("Data/kamusnormalisasi.csv")
 kamus_dict = dict(zip(kamus["salah"], kamus["benar"]))
 
-# === Tokenizer sama seperti training ===
-tweet_tokenizer = TweetTokenizer(
-    preserve_case=False,
-    strip_handles=False,
-    reduce_len=True
-)
-
 # === Preprocessing FINAL (tanpa stopword & tanpa stemming) ===
 def full_preprocess(text):
     if pd.isnull(text):
@@ -180,6 +173,7 @@ if st.button("Prediksi"):
         st.warning("Masukkan teks terlebih dahulu.")
 
 st.caption("Model BiLSTM – Analisis Sentimen Program Makan Bergizi Gratis")
+
 
 
 
