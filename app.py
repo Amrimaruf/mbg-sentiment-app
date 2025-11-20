@@ -61,7 +61,27 @@ def add_bg_from_local(image_file):
         font-weight: 700 !important;
         text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
     }}
+/* ===== Alert Error (Negatif) lebih terang ===== */
+.stAlert:has(> .stMarkdown:contains("Negatif")), 
+.stAlert:has(> div:contains("Negatif")) {{
+    background-color: rgba(255, 60, 60, 0.95) !important;
+    color: white !important;
+    font-weight: 800 !important;
+    border-radius: 12px !important;
+    border-left: 6px solid #ff0000 !important;
+    padding: 15px !important;
+}}
 
+/* ===== Alert Success (Positif) lebih terang ===== */
+.stAlert:has(> .stMarkdown:contains("Positif")), 
+.stAlert:has(> div:contains("Positif")) {{
+    background-color: rgba(0, 200, 80, 0.95) !important;
+    color: white !important;
+    font-weight: 800 !important;
+    border-radius: 12px !important;
+    border-left: 6px solid #00ff66 !important;
+    padding: 15px !important;
+}}
     /* Tombol */
     .stButton button {{
         background-color: rgba(255, 255, 255, 0.85) !important;
@@ -73,7 +93,7 @@ def add_bg_from_local(image_file):
     }}
 
     .stButton button:hover {{
-        background-color: white !important;
+        background-color: black !important;
         color: black !important;
         transform: scale(1.02);
         transition: 0.2s;
@@ -174,6 +194,7 @@ if st.button("Prediksi"):
         st.warning("Masukkan teks terlebih dahulu.")
 
 st.caption("Model BiLSTM – Analisis Sentimen Program Makan Bergizi Gratis")
+
 
 
 
