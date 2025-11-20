@@ -2,7 +2,7 @@ import streamlit as st
 import re, pickle, joblib, json, base64
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
+from nltk.tokenize import TweetTokenizer
 
 # ==========================================
 # 🔹 FUNGSI TAMBAHAN: BACKGROUND IMAGE
@@ -107,38 +107,44 @@ def load_artefacts():
 
 model, tokenizer, le, maxlen = load_artefacts()
 
-
 # ==========================================
 # 🔹 PREPROCESSING (SAMA DENGAN COLAB)
 # ==========================================
-normalization_dict = {
-    "gk": "tidak", "nggak": "tidak", "ga": "tidak", "bgt": "banget",
-    "mbg": "makan bergizi gratis", "programnya": "program"
-}
-stopwords = set(["yang", "dan", "di", "ke", "dari", "untuk", "itu", "ini", "saya", "kami"])
-stemmer = StemmerFactory().create_stemmer()
+# === Load kamus normalisasi ===
+kamus = pd.read_csv("Data/kamusnormalisasi.csv")
+kamus_dict = dict(zip(kamus["salah"], kamus["benar"]))
 
+# === Tokenizer sama seperti training ===
+tweet_tokenizer = TweetTokenizer(
+    preserve_case=False,
+    strip_handles=False,
+    reduce_len=True
+)
+
+# === Preprocessing FINAL (tanpa stopword & tanpa stemming) ===
 def full_preprocess(text):
+    if pd.isnull(text):
+        return []
+
+    # 1. Cleansing
+    text = text.strip()
+    text = re.sub(r'@\w+', '', text)                      # username
+    text = re.sub(r'http\S+|www\S+', '', text)            # URL
+    text = re.sub(r'#\w+', '', text)                      # hashtag
+    text = re.sub(r'\d+', '', text)                       # angka
+    text = re.sub(r'[^\w\s]', '', text)                   # tanda baca
+    text = re.sub(r'\b[b-hj-zB-HJ-Z]\b', '', text)        # huruf tunggal
+    text = re.sub(r'[^a-zA-Z\s]', '', text)               # non-huruf
+    text = re.sub(r'\s+', ' ', text).strip()              # spasi berlebih
+
+    # 2. Case folding
     text = text.lower()
-    text = re.sub(r'[^a-zA-Z\s]', '', text)
-    for slang, formal in normalization_dict.items():
-        text = text.replace(slang, formal)
 
-    neg_patterns = [
-        r'tidak\s+(berhasil|membantu|puas|signifikan|berdampak|efektif|berguna|positif)',
-        r'tidak\s+ada\s+(perubahan|manfaat|hasil)',
-        r'tidak\s+(terasa|terlihat|terbukti|bermakna)',
-        r'tidak\s+(merasakan|melihat|mendapatkan)\s+(dampak|manfaat|hasil)\s+(positif|nyata|signifikan)',
-        r'tidak\s+(memberikan|menunjukkan)\s+(hasil|perubahan|efek)',
-        r'tidak\s+(membawa|menghasilkan)\s+(kemajuan|manfaat|perbaikan)'
-    ]
+    # 3. Tokenizing
+    tokens = tweet_tokenizer.tokenize(text)
 
-    for pattern in neg_patterns:
-        text = re.sub(pattern, lambda m: 'neg_' + '_'.join(m.group(0).split()), text)
-
-    tokens = text.split()
-    tokens = [t for t in tokens if t not in stopwords]
-    tokens = [stemmer.stem(t) for t in tokens]
+    # 4. Normalisasi slang
+    tokens = [kamus_dict.get(t, t) for t in tokens]
 
     return tokens
 
@@ -174,6 +180,7 @@ if st.button("Prediksi"):
         st.warning("Masukkan teks terlebih dahulu.")
 
 st.caption("Model BiLSTM – Analisis Sentimen Program Makan Bergizi Gratis")
+
 
 
 
