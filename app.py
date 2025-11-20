@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 import os
 import re, pickle, joblib, json, base64
 from tensorflow.keras.models import load_model
@@ -110,12 +111,8 @@ model, tokenizer, le, maxlen = load_artefacts()
 # ==========================================
 # 🔹 PREPROCESSING (SAMA DENGAN COLAB)
 # ==========================================
-
-st.write("Root files:", os.listdir())
-st.write("Data folder exists:", os.path.exists("Data"))
-st.write("Files inside Data:", os.listdir("Data"))
 # === Load kamus normalisasi ===
-kamus = pd.read_csv("./Data/kamusnormalisasi.csv")
+kamus = pd.read_csv("Data/kamusnormalisasi.csv")
 kamus_dict = dict(zip(kamus["salah"], kamus["benar"]))
 
 # === Tokenizer sama seperti training ===
@@ -184,6 +181,7 @@ if st.button("Prediksi"):
         st.warning("Masukkan teks terlebih dahulu.")
 
 st.caption("Model BiLSTM – Analisis Sentimen Program Makan Bergizi Gratis")
+
 
 
 
