@@ -1,6 +1,6 @@
 streamlit
 tensorflow
 scikit-learn
-sastrawi
 numpy
 pandas
+
