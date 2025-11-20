@@ -48,7 +48,7 @@ def add_bg_from_local(image_file):
 st.set_page_config(page_title="Prediksi Sentimen MBG", page_icon="🔮")
 
 # Ganti path sesuai lokasi gambar kamu
-add_bg_from_local("Assets/mbg.jpg")
+add_bg_from_local("assets/mbg.jpg")
 
 
 # ==========================================
@@ -133,5 +133,6 @@ if st.button("Prediksi"):
         st.warning("Masukkan teks terlebih dahulu.")
 
 st.caption("Model BiLSTM – Analisis Sentimen Program Makan Bergizi Gratis")
+
 
 
