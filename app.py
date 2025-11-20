@@ -13,7 +13,7 @@ def add_bg_from_local(image_file):
 
     css = f"""
     <style>
-    /* Background image */
+    /* Background */
     .stApp {{
         background-image: url("data:image/png;base64,{encoded_string}");
         background-size: cover;
@@ -21,7 +21,6 @@ def add_bg_from_local(image_file):
         background-repeat: no-repeat;
     }}
 
-    /* Overlay gelap biar teks lebih jelas */
     .stApp::before {{
         content: "";
         position: fixed;
@@ -38,14 +37,14 @@ def add_bg_from_local(image_file):
         z-index: 1;
     }}
 
-    /* Header putih */
+    /* Text styling */
     h1, h2, h3, h4, h5, h6, p, label, span {{
         color: white !important;
         font-weight: 700 !important;
         text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
     }}
 
-    /* FIX: Text area → background putih solid, teks hitam */
+    /* Text Area */
     .stTextArea textarea {{
         background: rgba(255,255,255,0.95) !important;
         color: black !important;
@@ -55,16 +54,16 @@ def add_bg_from_local(image_file):
         border: 2px solid rgba(255,255,255,0.5) !important;
     }}
 
-    /* Caption (Model BiLSTM...) diperjelas */
-    .stMarkdown small, .stCaption, .stFooter {{
+    /* Caption */
+    .stMarkdown small, .stCaption {{
         color: white !important;
         font-weight: 700 !important;
         text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
     }}
 
-    /* Tombol */
+    /* Button */
     .stButton button {{
-        background-color: rgba(255, 255, 255, 0.85) !important;
+        background-color: rgba(255, 255, 255, 0.90) !important;
         color: black !important;
         border-radius: 10px !important;
         padding: 10px 20px !important;
@@ -73,11 +72,12 @@ def add_bg_from_local(image_file):
     }}
 
     .stButton button:hover {{
-        background-color: black !important;
+        background-color: #e6e6e6 !important;
         color: black !important;
         transform: scale(1.02);
         transition: 0.2s;
     }}
+
     </style>
     """
     st.markdown(css, unsafe_allow_html=True)
@@ -87,8 +87,6 @@ def add_bg_from_local(image_file):
 # 🔹 PAGE CONFIG DAN BACKGROUND
 # ==========================================
 st.set_page_config(page_title="Prediksi Sentimen MBG", page_icon="🔮")
-
-# Ganti path sesuai lokasi gambar kamu
 add_bg_from_local("assets/mbg.jpg")
 
 
@@ -108,33 +106,38 @@ def load_artefacts():
 model, tokenizer, le, maxlen = load_artefacts()
 
 # ==========================================
-# 🔹 PREPROCESSING (SAMA DENGAN COLAB)
+# 🔹 PREPROCESSING SESUAI TRAINING
 # ==========================================
-# === Load kamus normalisasi ===
-kamus = pd.read_csv("Data/kamusnormalisasi.csv")
+
+# --- Simple tokenizer pengganti TweetTokenizer ---
+def simple_tokenizer(text):
+    return text.split()
+
+# --- Load kamus normalisasi ---
+kamus = pd.read_csv("./Data/kamusnormalisasi.csv")
 kamus_dict = dict(zip(kamus["salah"], kamus["benar"]))
 
-# === Preprocessing FINAL (tanpa stopword & tanpa stemming) ===
+# --- Full Preprocess ---
 def full_preprocess(text):
     if pd.isnull(text):
         return []
 
     # 1. Cleansing
     text = text.strip()
-    text = re.sub(r'@\w+', '', text)                      # username
-    text = re.sub(r'http\S+|www\S+', '', text)            # URL
-    text = re.sub(r'#\w+', '', text)                      # hashtag
-    text = re.sub(r'\d+', '', text)                       # angka
-    text = re.sub(r'[^\w\s]', '', text)                   # tanda baca
-    text = re.sub(r'\b[b-hj-zB-HJ-Z]\b', '', text)        # huruf tunggal
-    text = re.sub(r'[^a-zA-Z\s]', '', text)               # non-huruf
-    text = re.sub(r'\s+', ' ', text).strip()              # spasi berlebih
+    text = re.sub(r'@\w+', '', text)
+    text = re.sub(r'http\S+|www\S+', '', text)
+    text = re.sub(r'#\w+', '', text)
+    text = re.sub(r'\d+', '', text)
+    text = re.sub(r'[^\w\s]', '', text)
+    text = re.sub(r'\b[b-hj-zB-HJ-Z]\b', '', text)
+    text = re.sub(r'[^a-zA-Z\s]', '', text)
+    text = re.sub(r'\s+', ' ', text).strip()
 
     # 2. Case folding
     text = text.lower()
 
     # 3. Tokenizing
-    tokens = tweet_tokenizer.tokenize(text)
+    tokens = simple_tokenizer(text)
 
     # 4. Normalisasi slang
     tokens = [kamus_dict.get(t, t) for t in tokens]
@@ -166,30 +169,10 @@ if st.button("Prediksi"):
     if user_input.strip():
         label = predict_sentiment(user_input)
         if label.lower() == "positif":
-            st.success("✅ Prediksi: **Positif**")
+            st.success("🟢 Prediksi: **Positif**")
         else:
-            st.error("❌ Prediksi: **Negatif**")
+            st.error("🔴 Prediksi: **Negatif**")
     else:
         st.warning("Masukkan teks terlebih dahulu.")
 
 st.caption("Model BiLSTM – Analisis Sentimen Program Makan Bergizi Gratis")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
