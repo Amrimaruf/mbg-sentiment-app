@@ -72,7 +72,7 @@ def add_bg_from_local(image_file):
     }}
 
     .stButton button:hover {{
-        background-color: #e6e6e6 !important;
+        background-color: black !important;
         color: black !important;
         transform: scale(1.02);
         transition: 0.2s;
@@ -176,3 +176,4 @@ if st.button("Prediksi"):
         st.warning("Masukkan teks terlebih dahulu.")
 
 st.caption("Model BiLSTM – Analisis Sentimen Program Makan Bergizi Gratis")
+
