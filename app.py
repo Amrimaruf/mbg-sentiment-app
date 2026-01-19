@@ -95,7 +95,7 @@ add_bg_from_local("assets/mbg.jpg")
 # ==========================================
 @st.cache_resource
 def load_artefacts():
-    model = load_model('Model/bilstm_model.keras')
+    model = load_model('Model/bilstm_best.keras')
     with open('Data/tokenizer.pkl', 'rb') as f:
         tokenizer = pickle.load(f)
     le = joblib.load('Data/label_encoder.pkl')
@@ -176,4 +176,5 @@ if st.button("Prediksi"):
         st.warning("Masukkan teks terlebih dahulu.")
 
 st.caption("Model BiLSTM – Analisis Sentimen Program Makan Bergizi Gratis")
+
 
