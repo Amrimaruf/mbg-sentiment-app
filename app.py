@@ -146,11 +146,29 @@ def full_preprocess(text):
 
 
 # ==========================================
+# 🔹 CEK RASIO KATA TIDAK DIKENAL (OOV)
+# ==========================================
+def get_oov_ratio(tokens, tokenizer):
+    if len(tokens) == 0:
+        return 1.0
+    oov_count = sum(1 for t in tokens if tokenizer.word_index.get(t) is None)
+    return oov_count / len(tokens)
+
+
+# ==========================================
 # 🔹 PREDIKSI
 # ==========================================
+OOV_THRESHOLD = 0.6  # >=60% kata di input tidak dikenal -> "Tidak Dikenali"
+
 def predict_sentiment(text):
-    processed = [full_preprocess(text)]
-    sequences = tokenizer.texts_to_sequences(processed)
+    tokens = full_preprocess(text)
+
+    # Cek dulu apakah kata-katanya dikenal model
+    oov_ratio = get_oov_ratio(tokens, tokenizer)
+    if oov_ratio >= OOV_THRESHOLD:
+        return "Tidak Dikenali"
+
+    sequences = tokenizer.texts_to_sequences([tokens])
     padded = pad_sequences(sequences, maxlen=maxlen, padding='post')
     prob = model.predict(padded, verbose=0)[0][0]
     label = le.inverse_transform([int(prob > 0.5)])[0]
@@ -168,7 +186,9 @@ user_input = st.text_area("📝 Teks", height=150)
 if st.button("Prediksi"):
     if user_input.strip():
         label = predict_sentiment(user_input)
-        if label.lower() == "positif":
+        if label == "Tidak Dikenali":
+            st.warning("⚪ Prediksi: **Tidak Dikenali** — kata/kalimat tidak ditemukan dalam dataset.")
+        elif label.lower() == "positif":
             st.success("🟢 Prediksi: **Positif**")
         else:
             st.error("🔴 Prediksi: **Negatif**")
@@ -176,5 +196,3 @@ if st.button("Prediksi"):
         st.warning("Masukkan teks terlebih dahulu.")
 
 st.caption("Model BiLSTM – Analisis Sentimen Program Makan Bergizi Gratis")
-
-
