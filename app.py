@@ -187,11 +187,11 @@ if st.button("Prediksi"):
     if user_input.strip():
         label = predict_sentiment(user_input)
         if label == "Tidak Dikenali":
-            st.warning("⚪ Prediksi: **Tidak Dikenali**")
+            st.warning("⚪ **Tidak Dikenali**")
         elif label.lower() == "positif":
-            st.success("🟢 Prediksi: **Positif**")
+            st.success("🟢 **Positif**")
         else:
-            st.error("🔴 Prediksi: **Negatif**")
+            st.error("🔴 **Negatif**")
     else:
         st.warning("Masukkan teks terlebih dahulu.")
 
