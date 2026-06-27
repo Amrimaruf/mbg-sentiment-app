@@ -95,7 +95,7 @@ add_bg_from_local("assets/mbg.jpg")
 # ==========================================
 @st.cache_resource
 def load_artefacts():
-    model = load_model('Model/bilstm_best.keras')
+    model = load_model('Model/bilstm_model.keras')
     with open('Data/tokenizer.pkl', 'rb') as f:
         tokenizer = pickle.load(f)
     le = joblib.load('Data/label_encoder.pkl')
