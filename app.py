@@ -187,7 +187,7 @@ if st.button("Prediksi"):
     if user_input.strip():
         label = predict_sentiment(user_input)
         if label == "Tidak Dikenali":
-            st.warning("⚪ Prediksi: **Tidak Dikenali** — kata/kalimat tidak ditemukan dalam dataset.")
+            st.warning("⚪ Prediksi: **Tidak Dikenali**")
         elif label.lower() == "positif":
             st.success("🟢 Prediksi: **Positif**")
         else:
