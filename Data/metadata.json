@@ -1,1 +1,1 @@
-{"vocab_size": 9627, "maxlen": 38, "embedding_dim": 150, "window": 5, "min_count": 2, "w2v_epochs": 50, "oov_token": "<OOV>", "padding": "post", "truncating": "post", "use_phrases": false, "seed": 42}
+{"vocab_size": 19088, "maxlen": 42, "embedding_dim": 150, "window": 5, "min_count": 1, "w2v_epochs": 50, "oov_token": "<OOV>", "padding": "post", "truncating": "post", "use_phrases": false, "seed": 42}
